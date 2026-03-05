@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<title>🔐 verify</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Auth Screen */
+.auth-screen {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 30px;
+    padding: 40px 25px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    backdrop-filter: blur(10px);
+    animation: slideUp 0.5s ease;
+    width: 100%;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+h1 {
+    color: #333;
+    font-size: clamp(24px, 8vw, 32px);
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.subtitle {
+    color: #666;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: clamp(14px, 4vw, 16px);
+}
+
+/* Steganography Image Section */
+.stego-container {
+    margin: 20px 0 30px;
+    text-align: center;
+}
+
+.stego-label {
+    color: #555;
+    font-size: clamp(12px, 3.5vw, 14px);
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.stego-image {
+    width: min(200px, 60%);
+    height: min(200px, 60vw);
+    margin: 0 auto;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: transform 0.3s;
+    border: 3px solid white;
+}
+
+.stego-image:hover {
+    transform: scale(1.02);
+}
+
+.stego-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.stego-caption {
+    margin-top: 10px;
+    color: #666;
+    font-size: clamp(10px, 3vw, 12px);
+}
+
+.stego-caption a {
+    color: #764ba2;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.stego-caption a:hover {
+    text-decoration: underline;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: 500;
+    font-size: clamp(12px, 3.5vw, 14px);
+}
+
+input {
+    width: 100%;
+    padding: 18px 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 20px;
+    font-size: clamp(14px, 4vw, 16px);
+    transition: all 0.3s;
+    -webkit-appearance: none;
+    background: white;
+}
+
+input:focus {
+    outline: none;
+    border-color: #764ba2;
+    box-shadow: 0 0 0 3px rgba(118, 75, 162, 0.1);
+}
+
+.hint-container {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.hint-btn {
+    background: none;
+    border: none;
+    color: #764ba2;
+    font-size: clamp(12px, 3.5vw, 14px);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    padding: 10px 0;
+    width: 100%;
+}
+
+.hint-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: #764ba2;
+    flex-shrink: 0;
+}
+
+.hint-paper {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff3cd;
+    border: 2px solid #ffeeba;
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    transform: rotate(-1deg);
+    z-index: 10;
+    display: none;
+}
+
+.hint-paper.show {
+    display: block;
+    animation: paperFlip 0.3s ease;
+}
+
+@keyframes paperFlip {
+    0% {
+        opacity: 0;
+        transform: rotate(-5deg) scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: rotate(-1deg) scale(1);
+    }
+}
+
+.hint-paper::before {
+    content: "📌";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 24px;
+}
+
+.hint-paper p {
+    color: #856404;
+    margin-bottom: 10px;
+    font-style: italic;
+    font-size: clamp(12px, 3.5vw, 14px);
+}
+
+.hint-paper .secret {
+    font-family: 'Courier New', monospace;
+    background: rgba(0,0,0,0.05);
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: clamp(12px, 3.5vw, 14px);
+    letter-spacing: 1px;
+    word-break: break-word;
+}
+
+.hint-paper .highlight {
+    background: #ffeeba;
+    padding: 2px 5px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.btn {
+    width: 100%;
+    padding: 18px;
+    border: none;
+    border-radius: 25px;
+    font-size: clamp(16px, 5vw, 18px);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    -webkit-appearance: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Download button */
+.download-btn {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #764ba2;
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: clamp(12px, 3.5vw, 14px);
+    transition: all 0.3s;
+}
+
+.download-btn:hover {
+    background: #5a3d7a;
+    transform: translateY(-2px);
+}
+
+/* Confirmation Screen */
+.confirmation-screen {
+    background: white;
+    border-radius: 30px;
+    padding: 30px 25px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    display: none;
+    animation: slideUp 0.5s ease;
+    width: 100%;
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.profile-pic {
+    width: min(150px, 40%);
+    height: min(150px, 40vw);
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-pic img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid white;
+}
+
+.kitty-icon {
+    font-size: clamp(60px, 20vw, 80px);
+    line-height: 1;
+    display: block;
+}
+
+.name {
+    font-size: clamp(24px, 7vw, 28px);
+    color: #333;
+    margin-bottom: 5px;
+    text-transform: capitalize;
+}
+
+.badge {
+    background: #f0f0f0;
+    color: #666;
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: clamp(12px, 3.5vw, 14px);
+    display: inline-block;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+    margin: 30px 0;
+}
+
+.info-card {
+    background: #f8f9fa;
+    padding: 20px 15px;
+    border-radius: 20px;
+    text-align: center;
+    border: 2px solid transparent;
+    transition: all 0.3s;
+}
+
+.info-card:hover {
+    border-color: #764ba2;
+    transform: scale(1.02);
+}
+
+.info-icon {
+    font-size: clamp(24px, 6vw, 28px);
+    margin-bottom: 10px;
+    display: block;
+}
+
+.info-label {
+    color: #666;
+    font-size: clamp(10px, 3vw, 12px);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+.info-value {
+    color: #333;
+    font-size: clamp(14px, 4vw, 16px);
+    font-weight: 600;
+    word-break: break-word;
+}
+
+.placeholder {
+    color: #333;
+    font-style: normal;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.decision-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn-yes {
+    flex: 2;
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    padding: 18px;
+    border: none;
+    border-radius: 25px;
+    font-size: clamp(14px, 4vw, 16px);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-no {
+    flex: 1;
+    background: #f44336;
+    color: white;
+    padding: 18px;
+    border: none;
+    border-radius: 25px;
+    font-size: clamp(14px, 4vw, 16px);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-no:hover {
+    background: #d32f2f;
+}
+
+/* No Choice Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 30px;
+    padding: 40px 30px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    animation: modalPop 0.3s ease;
+}
+
+@keyframes modalPop {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal-icon {
+    font-size: clamp(50px, 15vw, 60px);
+    margin-bottom: 20px;
+    display: block;
+}
+
+.modal-content h2 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: clamp(20px, 6vw, 24px);
+}
+
+.modal-content p {
+    color: #666;
+    margin-bottom: 25px;
+    line-height: 1.6;
+    font-size: clamp(14px, 4vw, 16px);
+}
+
+.modal-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 25px;
+    font-size: clamp(14px, 4vw, 16px);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    width: 100%;
+    max-width: 200px;
+}
+
+/* Error message */
+.error-message {
+    color: #f44336;
+    font-size: clamp(12px, 3.5vw, 14px);
+    margin-top: 10px;
+    display: none;
+}
+
+.error-message.show {
+    display: block;
+    animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Mobile optimizations */
+@media (max-width: 480px) {
+    .container {
+        max-width: 100%;
+    }
+    
+    .auth-screen, .confirmation-screen {
+        padding: 25px 15px;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .full-width {
+        grid-column: span 1;
+    }
+    
+    .decision-buttons {
+        flex-direction: column;
+    }
+    
+    .btn-yes, .btn-no {
+        width: 100%;
+    }
+    
+    .hint-paper {
+        padding: 15px;
+    }
+}
+
+/* Small phone optimization */
+@media (max-width: 360px) {
+    .auth-screen, .confirmation-screen {
+        padding: 20px 12px;
+    }
+    
+    input, .btn, .btn-yes, .btn-no {
+        padding: 15px;
+    }
+}
+</style>
+</head>
+<body>
+    <div class="container">
+        <!-- Auth Screen -->
+        <div id="authScreen" class="auth-screen">
+            
+            
+            <div class="subtitle">Find the code hidden in the image</div>
+            
+            <!-- Steganography Image Section -->
+            <div class="stego-container">
+                <div class="stego-label"></div>
+                <div class="stego-image" onclick="downloadImage()">
+                    <!-- Replace 'stego-image.jpg' with your actual image file name -->
+                    <img src="stego-image.jpg" alt="encoded image" id="stegoImage">
+                </div>
+                <div class="stego-caption">
+                    <span>Click image to download</span> |
+                    <a href="#" onclick="downloadImage(); return false;">📥 Download</a>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label>Enter the hidden code</label>
+                <input type="text" id="nameInput" placeholder="Decode the image to find it..." autocomplete="off">
+            </div>
+            
+            <div class="hint-container">
+                <button class="hint-btn" onclick="toggleHint()">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                    </svg>
+                    Want a hint? 
+                </button>
+                <div id="hintPaper" class="hint-paper">
+                    
+                    <div class="secret">
+        
+                        <span class="highlight">2.</span> Download the image above<br>
+                        <span class="highlight">3.</span> Read image filename<br>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" onclick="authenticate()"> Enter →</button>
+            <div id="errorMsg" class="error-message">try again twin</div>
+        </div>
+        
+        <!-- Confirmation Screen -->
+        <div id="confirmScreen" class="confirmation-screen">
+            <div class="profile-header">
+                <div class="profile-pic">
+                    <span class="kitty-icon">🐱</span>
+                </div>
+                <div class="name" id="displayName"></div>
+                <span class="badge">bubbles</span>
+            </div>
+            
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="info-icon"></span>
+                    <div class="info-label">Height</div>
+                    <div class="info-value placeholder">big dawg</div>
+                </div>
+                
+                <div class="info-card">
+                    <span class="info-icon"></span>
+                    <div class="info-label">Likes</div>
+                    <div class="info-value placeholder">Sleeping, binging series, thumbs up</div>
+                </div>
+                
+                <div class="info-card">
+                    <span class="info-icon"></span>
+                    <div class="info-label">Dislikes</div>
+                    <div class="info-value placeholder">humans</div>
+                </div>
+                
+                <div class="info-card">
+                    <span class="info-icon"></span>
+                    <div class="info-label">Fav Food</div>
+                    <div class="info-value placeholder">soybean</div>
+                </div>
+                
+                <div class="info-card full-width">
+                    <span class="info-icon">💬</span>
+                    <div class="info-label">Most Used Line</div>
+                    <div class="info-value placeholder">"mai to gareeb honji"</div>
+                </div>
+            </div>
+            
+            <div class="decision-buttons">
+                <button class="btn-yes" onclick="handleYes()">yes, that's correct</button>
+                <button class="btn-no" onclick="handleNo()"> No</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- No Choice Modal -->
+    <div id="noChoiceModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-icon">tsk tsk tsk</span>
+            <h2>Nice try! 😼</h2>
+            <p>put yes!<br></p>
+            <button class="modal-btn" onclick="closeModal()">go back</button>
+        </div>
+    </div>
+
+<script>
+// The hidden code that should be decoded from the steganography image
+// FIXED: Using exact case and spaces as user would type
+const CORRECT_CODE = "smoL kiTty"; // Keep exact same as what you hide in image
+
+function toggleHint() {
+    const hint = document.getElementById('hintPaper');
+    hint.classList.toggle('show');
+}
+
+function downloadImage() {
+    const img = document.getElementById('stegoImage');
+    
+    // Create a temporary link to download the image
+    const link = document.createElement('a');
+    link.href = img.src;
+    link.download = 'Go_To_Online_Steganography_Decoder.png'; // Name for downloaded file
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Optional: Show a little notification
+    alert('never gonna give you up (get rickrolled)');
+}
+
+function authenticate() {
+    const input = document.getElementById('nameInput');
+    const errorMsg = document.getElementById('errorMsg');
+    const code = input.value.trim(); // REMOVED toLowerCase() to preserve case sensitivity
+    
+    // FIXED: Direct comparison without changing case
+    if (code === CORRECT_CODE) {
+        // Success - show confirmation screen
+        document.getElementById('authScreen').style.display = 'none';
+        document.getElementById('confirmScreen').style.display = 'block';
+        document.getElementById('displayName').textContent = "Manya"; // Shows name instead of code
+        errorMsg.classList.remove('show');
+    } else {
+        // Show error
+        errorMsg.classList.add('show');
+        input.style.borderColor = '#f44336';
+        
+        // Shake animation
+        input.style.animation = 'shake 0.3s ease';
+        setTimeout(() => {
+            input.style.animation = '';
+        }, 300);
+    }
+}
+
+function handleYes() {
+    // Open the link to the first website
+    window.location.href = 'https://lonelyavocado17.github.io/m20bd/';
+}
+
+function handleNo() {
+    // Show modal
+    document.getElementById('noChoiceModal').classList.add('show');
+    
+    // Make the No button run away (fun effect)
+    const noBtn = document.querySelector('.btn-no');
+    noBtn.style.transform = 'translateX(' + (Math.random() * 100 - 50) + 'px) translateY(' + (Math.random() * 20 - 10) + 'px)';
+    noBtn.style.transition = 'transform 0.2s ease';
+    
+    // Reset after a bit
+    setTimeout(() => {
+        noBtn.style.transform = '';
+        noBtn.style.transition = '';
+    }, 500);
+}
+
+function closeModal() {
+    document.getElementById('noChoiceModal').classList.remove('show');
+}
+
+// Close hint when clicking outside
+document.addEventListener('click', function(event) {
+    const hint = document.getElementById('hintPaper');
+    const hintBtn = document.querySelector('.hint-btn');
+    
+    if (!hintBtn.contains(event.target) && !hint.contains(event.target)) {
+        hint.classList.remove('show');
+    }
+});
+
+// Handle enter key in input
+document.getElementById('nameInput').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        authenticate();
+    }
+});
+
+// Image error handling - shows a placeholder if image doesn't load
+document.getElementById('stegoImage').onerror = function() {
+    this.onerror = null;
+    this.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><rect width="200" height="200" fill="%23f0f0f0"/><text x="50" y="100" font-family="Arial" font-size="14" fill="%23999">Place your</text><text x="45" y="120" font-family="Arial" font-size="14" fill="%23999">stego image here</text><text x="75" y="140" font-family="Arial" font-size="20" fill="%23764ba2">🔐</text></svg>';
+};
+</script>
+</body>
+</html>
