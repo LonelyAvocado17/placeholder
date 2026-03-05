@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html>
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
@@ -102,6 +102,15 @@ h1 {
     margin-top: 10px;
     color: #666;
     font-size: clamp(10px, 3vw, 12px);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.stego-caption .zoom-instruction {
+    color: #764ba2;
+    font-weight: 500;
+    font-size: clamp(11px, 3.2vw, 13px);
 }
 
 .stego-caption a {
@@ -455,6 +464,70 @@ input:focus {
     animation: modalPop 0.3s ease;
 }
 
+/* Zoom Modal */
+.zoom-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.9);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.zoom-modal.show {
+    display: flex;
+}
+
+.zoom-modal-content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.zoom-modal-content img {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    cursor: zoom-in;
+    transition: transform 0.3s ease;
+}
+
+.zoom-modal-content img.zoomed {
+    transform: scale(2);
+    cursor: zoom-out;
+}
+
+.close-zoom {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    background: rgba(0,0,0,0.5);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+}
+
+.close-zoom:hover {
+    background: rgba(0,0,0,0.8);
+}
+
 @keyframes modalPop {
     from {
         opacity: 0;
@@ -573,13 +646,16 @@ input:focus {
             <!-- Steganography Image Section -->
             <div class="stego-container">
                 <div class="stego-label"></div>
-                <div class="stego-image" onclick="downloadImage()">
+                <div class="stego-image" onclick="openZoomModal()">
                     <!-- Replace 'stego-image.jpg' with your actual image file name -->
                     <img src="stego-image.jpg" alt="encoded image" id="stegoImage">
                 </div>
                 <div class="stego-caption">
-                    <span>Click image to download</span> |
-                    <a href="#" onclick="downloadImage(); return false;">📥 Download</a>
+                    <span class="zoom-instruction">👆 Tap image to zoom</span>
+                    <div>
+                        <span>Click image to download</span> |
+                        <a href="#" onclick="downloadImage(); return false;">📥 Download</a>
+                    </div>
                 </div>
             </div>
             
@@ -670,6 +746,14 @@ input:focus {
             <button class="modal-btn" onclick="closeModal()">go back</button>
         </div>
     </div>
+    
+    <!-- Zoom Modal -->
+    <div id="zoomModal" class="zoom-modal" onclick="closeZoomModal(event)">
+        <div class="zoom-modal-content">
+            <span class="close-zoom" onclick="closeZoomModal()">✕</span>
+            <img src="stego-image.jpg" alt="Zoomed image" id="zoomImage" onclick="toggleZoom(event)">
+        </div>
+    </div>
 
 <script>
 // The hidden code that should be decoded from the steganography image
@@ -692,8 +776,33 @@ function downloadImage() {
     link.click();
     document.body.removeChild(link);
     
-    // Optional: Show a little notification
-    alert('never gonna give you up (get rickrolled)');
+    // Alert removed - no notification shown
+}
+
+function openZoomModal() {
+    const modal = document.getElementById('zoomModal');
+    const zoomImg = document.getElementById('zoomImage');
+    const stegoImg = document.getElementById('stegoImage');
+    
+    // Set the source from the main image
+    zoomImg.src = stegoImg.src;
+    // Remove zoom class when opening new image
+    zoomImg.classList.remove('zoomed');
+    
+    modal.classList.add('show');
+}
+
+function closeZoomModal(event) {
+    // If clicked directly on modal background or close button
+    const modal = document.getElementById('zoomModal');
+    modal.classList.remove('show');
+}
+
+function toggleZoom(event) {
+    // Toggle zoom on image click
+    event.stopPropagation();
+    const zoomImg = document.getElementById('zoomImage');
+    zoomImg.classList.toggle('zoomed');
 }
 
 function authenticate() {
