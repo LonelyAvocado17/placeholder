@@ -641,7 +641,7 @@ input:focus {
         <div id="authScreen" class="auth-screen">
             
             
-            <div class="subtitle">Find the code hidden in the image</div>
+            <div class="subtitle">Find the code in the image</div>
             
             <!-- Steganography Image Section -->
             <div class="stego-container">
@@ -653,14 +653,15 @@ input:focus {
                 <div class="stego-caption">
                     <span class="zoom-instruction">Tap image to zoom</span>
                     <div>
-                        <span>Click image to download</span> |
+                        <span>Click here to download</span> 
+                        <span>HINT:</span> ||
                         <a href="#" onclick="downloadImage(); return false;">📥 Download</a>
                     </div>
                 </div>
             </div>
             
             <div class="input-group">
-                <label>Enter the hidden code</label>
+                <label>Enter the code</label>
                 <input type="text" id="nameInput" placeholder="Decode the image to find it..." autocomplete="off">
             </div>
             
@@ -669,14 +670,14 @@ input:focus {
                     <svg viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
                     </svg>
-                    Click here for solution!!(try to figure it out by yourselves once though use google use anything) 
+                    Click here for solution(try to figure it out by yourselves once though use google use anything) 
                 </button>
                 <div id="hintPaper" class="hint-paper">
                     
                     <div class="secret">
                         <span class="highlight">1.</span> Download the image above<br>
-                        <span class="highlight">2.</span> Check back of the paper in the beyblade and to go alan eliasen's decoder<br>
-                        <span class="highlight">3.</span> Read image filename(if on pc)<br>
+                        <span class="highlight">2.</span> Read image filename(if on pc) <br>
+                        <span class="highlight">3.</span>Check back of the paper in the beyblade and to go alan eliasen's decoder<br>
                         <span class="highlight">3.</span>upload file and just submit<br>
                         
                     </div>
@@ -684,7 +685,7 @@ input:focus {
                 </div>
             </div>
             
-            <button class="btn btn-primary" onclick="authenticate()"> Enter →</button>
+            <button class="btn btn-primary" onclick="authenticate()"> Authenticate</button>
             <div id="errorMsg" class="error-message">try again twin</div>
         </div>
         
@@ -708,7 +709,7 @@ input:focus {
                 <div class="info-card">
                     <span class="info-icon"></span>
                     <div class="info-label">Likes</div>
-                    <div class="info-value placeholder">Sleeping, binging series, thumbs up</div>
+                    <div class="info-value placeholder">Sleeping, binging series, thumbs up, dexter</div>
                 </div>
                 
                 <div class="info-card">
@@ -720,18 +721,18 @@ input:focus {
                 <div class="info-card">
                     <span class="info-icon"></span>
                     <div class="info-label">Fav Food</div>
-                    <div class="info-value placeholder">soybean</div>
+                    <div class="info-value placeholder">soybean and veggies</div>
                 </div>
                 
                 <div class="info-card full-width">
-                    <span class="info-icon">💬</span>
+                    <span class="info-icon"></span>
                     <div class="info-label">Most Used Line</div>
                     <div class="info-value placeholder">"mai to gareeb honji"</div>
                 </div>
             </div>
             
             <div class="decision-buttons">
-                <button class="btn-yes" onclick="handleYes()">yes, that's correct</button>
+                <button class="btn-yes" onclick="handleYes()">yes, its all correct</button>
                 <button class="btn-no" onclick="handleNo()"> No</button>
             </div>
         </div>
@@ -741,7 +742,7 @@ input:focus {
     <div id="noChoiceModal" class="modal">
         <div class="modal-content">
             <span class="modal-icon">tsk tsk tsk</span>
-            <h2>Nice try! 😼</h2>
+            <h2>You dont have this option 😼</h2>
             <p>put yes!<br></p>
             <button class="modal-btn" onclick="closeModal()">go back</button>
         </div>
@@ -881,4 +882,5 @@ document.getElementById('stegoImage').onerror = function() {
 </body>
 
 </html>
+
 
