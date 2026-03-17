@@ -210,12 +210,14 @@ input::placeholder {
 }
 
 /* Hint Buttons Container */
+/* Hint Buttons Container */
 .hint-buttons-container {
     display: flex;
     gap: 10px;
-    margin-bottom: 10px; /* Reduced margin */
+    margin: 20px 0;  /* Add margin top and bottom */
+    position: relative;
+    z-index: 10;
 }
-
 .hint-btn {
     flex: 1;
     background: #1a1a1a;
@@ -252,26 +254,29 @@ input::placeholder {
 }
 
 /* Hint Containers - Fix overflow */
+/* Hint Containers - Fix positioning */
 .hint-container {
     position: relative;
     width: 100%;
-    margin-bottom: 10px; /* Add space for the dropdown */
-    min-height: 10px; /* Give it some height */
+    margin-bottom: 5px;
 }
 
 .hint-paper {
-    position: relative; /* Changed from absolute */
+    position: absolute;  /* Change back to absolute */
+    bottom: 100%;        /* Position above the button */
+    left: 0;
+    right: 0;
     background: #1a1a1a;
     border: 1px solid #444;
     border-radius: 15px;
     padding: 20px;
-    margin: 5px 0 15px 0; /* Adjusted margins */
-    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-    transform: rotate(-0.5deg);
-    z-index: 20;
+    margin-bottom: 10px;  /* Space between paper and button */
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.8);  /* Shadow above */
+    transform: rotate(0.5deg);  /* Slight rotation */
+    z-index: 100;
     display: none;
     border-left: 4px solid #666;
-    width: 100%; /* Ensure full width */
+    width: 100%;
 }
 
 .hint-paper.show {
@@ -746,6 +751,12 @@ input::placeholder {
         padding: 12px;
         font-size: 13px;
     }
+    .hint-paper {
+        padding: 15px;
+        margin-bottom: 8px;
+        max-height: 60vh;  /* Limit height on mobile */
+        overflow-y: auto;   /* Allow scrolling if too tall */
+    }
 }
 
 /* Small phone optimization */
@@ -817,8 +828,8 @@ input::placeholder {
                 <div id="hint2Paper" class="hint-paper">
                     <div class="secret">
                         <span class="highlight">1.</span> download the image above<br>
-                        <span class="highlight">2.</span> goto: <a href="https://futureboy.us/stegano/decinput.html" target="_blank">https://futureboy.us/stegano/decinput.html</a><br>
-                        <span class="highlight">3.</span> choose file and submit<br>
+                        <span class="highlight">2.</span> click here: <a href="https://futureboy.us/stegano/decinput.html" target="_blank">https://futureboy.us/stegano/decinput.html</a><br>
+                        <span class="highlight">3.</span> choose file and submit <br>
                     </div>
                 </div>
             </div>
