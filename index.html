@@ -56,7 +56,7 @@ body::before {
     animation: fadeIn 0.8s ease;
     width: 100%;
     position: relative;
-    overflow: hidden;
+    overflow: visible; /* Changed from hidden to allow dropdowns */
 }
 
 /* Mysterious glow effect */
@@ -70,6 +70,7 @@ body::before {
     background: radial-gradient(circle at center, rgba(255,255,255,0.03) 0%, transparent 70%);
     animation: rotate 20s linear infinite;
     pointer-events: none;
+    z-index: -1; /* Send to back */
 }
 
 @keyframes rotate {
@@ -212,7 +213,7 @@ input::placeholder {
 .hint-buttons-container {
     display: flex;
     gap: 10px;
-    margin-bottom: 30px;
+    margin-bottom: 10px; /* Reduced margin */
 }
 
 .hint-btn {
@@ -250,27 +251,27 @@ input::placeholder {
     fill: #fff;
 }
 
-/* Hint Paper */
+/* Hint Containers - Fix overflow */
 .hint-container {
     position: relative;
     width: 100%;
+    margin-bottom: 10px; /* Add space for the dropdown */
+    min-height: 10px; /* Give it some height */
 }
 
 .hint-paper {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
+    position: relative; /* Changed from absolute */
     background: #1a1a1a;
     border: 1px solid #444;
     border-radius: 15px;
     padding: 20px;
-    margin-top: 10px;
+    margin: 5px 0 15px 0; /* Adjusted margins */
     box-shadow: 0 20px 40px rgba(0,0,0,0.8);
     transform: rotate(-0.5deg);
     z-index: 20;
     display: none;
     border-left: 4px solid #666;
+    width: 100%; /* Ensure full width */
 }
 
 .hint-paper.show {
@@ -297,7 +298,7 @@ input::placeholder {
     line-height: 1.6;
 }
 
-.hint-paper .secret {
+.secret {
     font-family: 'Courier New', monospace;
     background: #252525;
     padding: 15px;
@@ -308,6 +309,19 @@ input::placeholder {
     word-break: break-word;
     color: #ddd;
     border: 1px solid #3a3a3a;
+    line-height: 1.8; /* Better line spacing */
+}
+
+/* Ensure links in hint papers are visible */
+.secret a {
+    color: #ffaa66;
+    text-decoration: none;
+    border-bottom: 1px dotted #ffaa66;
+    word-break: break-all; /* Prevent long URLs from breaking layout */
+}
+
+.secret a:hover {
+    color: #ffbb77;
 }
 
 .hint-paper .highlight {
@@ -721,10 +735,16 @@ input::placeholder {
     
     .hint-paper {
         padding: 15px;
+        margin: 5px 0 10px 0;
     }
     
     .hint-buttons-container {
         flex-direction: column;
+    }
+    
+    .secret {
+        padding: 12px;
+        font-size: 13px;
     }
 }
 
@@ -797,7 +817,7 @@ input::placeholder {
                 <div id="hint2Paper" class="hint-paper">
                     <div class="secret">
                         <span class="highlight">1.</span> download the image above<br>
-                        <span class="highlight">2.</span>goto:<a href="https://futureboy.us/stegano/decinput.html" target="_blank" style="color: #fff; text-decoration: underline; text-decoration-style: dotted;">https://futureboy.us/stegano/decinput.html</a><br>
+                        <span class="highlight">2.</span> goto: <a href="https://futureboy.us/stegano/decinput.html" target="_blank">https://futureboy.us/stegano/decinput.html</a><br>
                         <span class="highlight">3.</span> choose file and submit<br>
                     </div>
                 </div>
